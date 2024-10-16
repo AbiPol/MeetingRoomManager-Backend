@@ -1,5 +1,6 @@
 package com.meetingroom.manager.configuration.security;
 
+import com.meetingroom.manager.services.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
