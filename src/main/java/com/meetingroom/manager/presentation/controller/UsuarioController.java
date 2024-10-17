@@ -75,7 +75,7 @@ public class UsuarioController {
 	
 	@Autowired
 	UsuarioRolPermisosService usuarioRolPermisosService;
-	
+
 	//@SuppressWarnings("null")
 	@PostMapping(path = "/new")
 	public ResponseEntity<?> newUser(@RequestBody UsuarioRequest newUsuario, HttpServletRequest request) throws JsonProcessingException {
@@ -187,9 +187,9 @@ public class UsuarioController {
 		try {
 			Usuario userAux = usuarioService.buscoPorEmail(email)
 					  .orElseThrow(() -> new DataNotFoundException("USR-003", "No se encuentra el usuario " + email + " dado de alta en el sistema"));
-			
+			//usuarioRolPermisosService.deleteUserRol(userAux);
 			usuarioService.deleteUser(userAux);
-			response.put("Mensaje","Equipo borrado correctamente");
+			response.put("Mensaje","Usuario borrado correctamente");
 			return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 		} catch (DataAccessException e) {
 			throw  new BadRequestException("USR-004",e.getMessage());
@@ -204,7 +204,8 @@ public class UsuarioController {
 			Usuario userAux = usuarioService.buscoPorEmail(userUpdt.getEmail())
 					  .orElseThrow(() -> new DataNotFoundException("USR-005", "No se encuentra el usuario " + userUpdt.getEmail() + " dado de alta en el sistema"));
 			//En este caso solo actualizamos la password del usuario
-			userAux.setPassword(userUpdt.getPassword());
+			//log.info("**[MeetingRoom]--- password a modificar: " + passwordEncoder.encode(userUpdt.getPassword()));
+			userAux.setPassword(passwordEncoder.encode(userUpdt.getPassword()));
 			usuarioService.newUser(userAux);
 			response.put("Mensaje","Usuario modificado correctamente");
 			return new ResponseEntity<Map<String,Object>>(response, HttpStatus.CREATED);

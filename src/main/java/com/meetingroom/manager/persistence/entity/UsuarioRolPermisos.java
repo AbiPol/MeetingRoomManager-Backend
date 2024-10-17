@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 //import com.fasterxml.jackson.annotation.JsonProperty;
 //import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -53,10 +54,10 @@ public class UsuarioRolPermisos {
 	@JsonBackReference(value = "rol-usuario")
 	private Rol idRol;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user-rol-permisos", 
     joinColumns = @JoinColumn(name = "FK_user_rol"), 
     inverseJoinColumns = @JoinColumn(name = "FK_permiso"))
-	//@JsonProperty(access = Access.WRITE_ONLY)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Set<Permisos> permisos;
 }

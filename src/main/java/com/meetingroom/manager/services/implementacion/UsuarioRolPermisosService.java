@@ -1,5 +1,6 @@
 package com.meetingroom.manager.services.implementacion;
 
+import com.meetingroom.manager.persistence.entity.Usuario;
 import com.meetingroom.manager.persistence.entity.UsuarioRolPermisos;
 import com.meetingroom.manager.persistence.repository.IUsuarioRolPermisosDAO;
 import com.meetingroom.manager.services.interfaces.IUsuarioRolPermisos;
@@ -14,7 +15,7 @@ public class UsuarioRolPermisosService implements IUsuarioRolPermisos {
 	
 	@Override
 	public UsuarioRolPermisos newRolPermiso(UsuarioRolPermisos newValue) {
+
 		return usuarioRolPermisosDao.save(newValue) ;
 	}
-
 }

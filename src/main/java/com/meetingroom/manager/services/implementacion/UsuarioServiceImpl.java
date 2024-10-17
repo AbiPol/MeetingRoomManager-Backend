@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.meetingroom.manager.persistence.entity.Rol;
 import com.meetingroom.manager.persistence.entity.Usuario;
 import com.meetingroom.manager.persistence.repository.IUsuarioDAO;
+import com.meetingroom.manager.persistence.repository.IUsuarioRolPermisosDAO;
 import com.meetingroom.manager.services.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.mail.javamail.MimeMessageHelper;
@@ -21,6 +22,9 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
 	@Autowired
 	IUsuarioDAO usuarioDao;
+
+	@Autowired
+	IUsuarioRolPermisosDAO usuarioRolPermisos;
 	
 	@Override
 	@Transactional
@@ -32,6 +36,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	@Override
 	@Transactional
 	public void deleteUser(Usuario delUser) {
+
 		usuarioDao.delete(delUser);
 	}
 
