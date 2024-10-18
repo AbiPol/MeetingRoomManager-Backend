@@ -33,6 +33,7 @@ public class MailConfiguration {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true"); //Habilitamos el cifrado de la comunicacion entre la aplicacion y el servidor de email
         props.put("mail.debug", "true"); //Nos muestra en consola toda la informacion del envio del correo. Valido parta dev. Borrar en PROD
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
         return mailSender;
     }

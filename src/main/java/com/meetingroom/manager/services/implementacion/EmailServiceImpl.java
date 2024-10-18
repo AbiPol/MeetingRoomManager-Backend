@@ -40,8 +40,11 @@ public class EmailServiceImpl implements IEmailService {
         MimeMessage mensaje = mailSender.createMimeMessage();
         System.out.println("sendMailConfirmAccount ***SITEURL: " + siteURL);
         try {
+            System.out.println("Entro en el try");
             mensaje.setFrom(new InternetAddress(emailUser));
-            mensaje.setRecipients(MimeMessage.RecipientType.TO, user.getEmail());
+            System.out.println("Usuario al que envio correo: " + user.getEmail());
+            //mensaje.setRecipients(MimeMessage.RecipientType.TO, user.getEmail());
+            mensaje.setRecipients(MimeMessage.RecipientType.TO, "leo.polanco@gmail.com");
             mensaje.setContent(getHtmlConfirm(siteURL,user.getVerificationCode(),user.getEmail()), "text/html; charset=utf-8");
             mensaje.setSubject("Verifica tu registro en Meeting-Room Services");
 
