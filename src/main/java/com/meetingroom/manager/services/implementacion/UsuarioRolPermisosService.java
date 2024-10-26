@@ -1,6 +1,5 @@
 package com.meetingroom.manager.services.implementacion;
 
-import com.meetingroom.manager.persistence.entity.Usuario;
 import com.meetingroom.manager.persistence.entity.UsuarioRolPermisos;
 import com.meetingroom.manager.persistence.repository.IUsuarioRolPermisosDAO;
 import com.meetingroom.manager.services.interfaces.IUsuarioRolPermisos;

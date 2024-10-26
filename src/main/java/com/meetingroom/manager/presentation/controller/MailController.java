@@ -27,7 +27,8 @@ public class MailController {
 
         System.out.println("Mensaje Recibido " + emailDTO);
 
-        emailService.sendEmail(emailDTO.getToUser(), emailDTO.getSubject(), emailDTO.getMessage());
+        //emailService.sendEmail(emailDTO.getToUser(), emailDTO.getSubject(), emailDTO.getMessage());
+        emailService.sendEmail("leo.polanco@gmail.com", emailDTO.getSubject(), emailDTO.getMessage());
 
         Map<String, String> response = new HashMap<>();
         response.put("estado", "Enviado");

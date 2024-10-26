@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -69,10 +70,13 @@ public class JwtService {
     	return Keys.hmacShaKeyFor(keyBytes);
     }*/
 
+
+
     public String getUsernameFromToken(String token) {
     	//System.out.println("CLAIMS: " + getClaim(token, Claims::getSubject));
     	return getClaim(token, Claims::getSubject);
     }
+
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username=getUsernameFromToken(token);
@@ -109,5 +113,18 @@ public class JwtService {
             En este caso comparamos las fechas de expiracion del token con la fecha actual
          */
         return getExpiration(token).before(new Date());
+    }
+
+    public boolean verificoToken(String token) {
+        try {
+            // Verifica la firma y la expiración del token
+            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            System.out.println("Token expirado");
+        } catch (Exception e) {
+            System.out.println("Token inválido");
+        }
+        return false;
     }
 }

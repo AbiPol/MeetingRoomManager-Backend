@@ -36,16 +36,19 @@ public class EmailServiceImpl implements IEmailService {
     
     @Override
     @Transactional
-    public void sendMailConfirmAccount(Usuario user, String siteURL) {
+    public void sendMailConfirmAccount(Usuario user, String codigo) {
+        String siteURL = "http://localhost:8080/";
         MimeMessage mensaje = mailSender.createMimeMessage();
-        System.out.println("sendMailConfirmAccount ***SITEURL: " + siteURL);
+
+        //System.out.println("sendMailConfirmAccount ***COD VERIFICACION: " + codigo);
+
         try {
-            System.out.println("Entro en el try");
+            //System.out.println("Entro en el try");
             mensaje.setFrom(new InternetAddress(emailUser));
-            System.out.println("Usuario al que envio correo: " + user.getEmail());
+            //System.out.println("Usuario al que envio correo: " + user.getEmail());
             //mensaje.setRecipients(MimeMessage.RecipientType.TO, user.getEmail());
             mensaje.setRecipients(MimeMessage.RecipientType.TO, "leo.polanco@gmail.com");
-            mensaje.setContent(getHtmlConfirm(siteURL,user.getVerificationCode(),user.getEmail()), "text/html; charset=utf-8");
+            mensaje.setContent(getHtmlConfirm(siteURL,codigo,user.getEmail()), "text/html; charset=utf-8");
             mensaje.setSubject("Verifica tu registro en Meeting-Room Services");
 
             mailSender.send(mensaje);
@@ -61,7 +64,7 @@ public class EmailServiceImpl implements IEmailService {
      */
     @Override
     @Transactional
-    public void sendEmail(String[] toUser, String subject, String message) {
+    public void sendEmail(String toUser, String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 
         mailMessage.setFrom(emailUser); //Quien envia el correo
@@ -154,7 +157,7 @@ public class EmailServiceImpl implements IEmailService {
             try (var file = Files.lines(path)) {
                 var html = file.collect(Collectors.joining());
                 
-                String verifyURL = URL + "/verify?code=" + codigoVerificacion;
+                String verifyURL = URL + "verify?code=" + codigoVerificacion;
                 htmlEmail = html.replace("{{URL}}", verifyURL).replace("{{fullName}}", email);
             }
         } catch (Exception e) {

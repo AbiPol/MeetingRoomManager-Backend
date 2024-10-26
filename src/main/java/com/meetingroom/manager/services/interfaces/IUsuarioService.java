@@ -10,7 +10,9 @@ import java.util.Optional;
 
 public interface IUsuarioService {
 	
-	public Usuario newUser(Usuario newUsuario);
+	public Usuario newUser(String email, String passwordo);
+
+	public Usuario updateUser(Usuario updtUser);
 	
 	public void deleteUser(Usuario delUSer);
 	

@@ -11,7 +11,7 @@ public interface IEmailService {
 
     public void sendMailConfirmAccount(Usuario user, String siteURL) throws AddressException, MessagingException;
 
-    void sendEmail(String[] toUser, String subject, String message);
+    void sendEmail(String toUser, String subject, String message);
 
     void sendEmailWithFile(String[] toUser, String subject, String message, File file);
 

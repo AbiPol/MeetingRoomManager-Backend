@@ -1,4 +1,4 @@
-package com.meetingroom.manager.mainapp.controlador;
+package com.meetingroom.manager.presentation.controller;
 
 import java.util.HashSet;
 import java.util.List;
@@ -66,7 +66,7 @@ public class UsuarioRolController {
 			}
 			
 			//userAux.setRoles(newRoles);
-			Usuario newUser = usuarioService.newUser(userAux);
+			Usuario newUser = usuarioService.newUser(userAux.getEmail(),userAux.getPassword());
 			return new ResponseEntity<Usuario>(newUser, HttpStatus.CREATED);
 			
 		}catch(DataAccessException e) {

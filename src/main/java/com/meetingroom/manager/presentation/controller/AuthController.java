@@ -6,6 +6,7 @@ import java.util.Map;
 import com.meetingroom.manager.presentation.dto.AuthResponse;
 import com.meetingroom.manager.presentation.dto.LoginRequest;
 import com.meetingroom.manager.services.exception.BadRequestException;
+import com.meetingroom.manager.services.interfaces.IEmailService;
 import com.meetingroom.manager.services.interfaces.IUsuarioService;
 import com.meetingroom.manager.services.security.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class AuthController {
 
     @Autowired 
 	private IUsuarioService usuarioService;
+
    /* private final AuthService authService;
     
     @PostMapping(value = "login")
@@ -55,7 +57,7 @@ public class AuthController {
 	@PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest login)
     {
-		System.out.println("USUARIO: " + login.getUsername() );
+		//System.out.println("USUARIO: " + login.getUsername() );
         //return "Login en endpoint publico";
 		 try {
 			 return new ResponseEntity<AuthResponse>(authService.login(login), HttpStatus.OK);
@@ -68,18 +70,10 @@ public class AuthController {
 	      
 	     }
     }
-	
-	/*@PostMapping(value = "register")
-    public String register()
-    {
-		return "Register en endpoint publico";
-    }
-    */
-
     /*
 	 * Verificamos la activacion del usuario.
 	 */
-	@GetMapping("/verify")
+	@PostMapping("/verify")
 	public ResponseEntity<?> verifyUser(@RequestParam("code") String code) {
 		log.info("**[MeetingRoom]--- Verificando el codigo de activacion");
 		log.info("**[MeetingRoom]--- Parametro leido: " + code);
