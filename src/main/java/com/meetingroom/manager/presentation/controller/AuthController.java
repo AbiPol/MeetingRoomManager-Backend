@@ -6,9 +6,11 @@ import java.util.Map;
 import com.meetingroom.manager.presentation.dto.AuthResponse;
 import com.meetingroom.manager.presentation.dto.LoginRequest;
 import com.meetingroom.manager.services.exception.BadRequestException;
+import com.meetingroom.manager.services.exception.DataNotFoundException;
 import com.meetingroom.manager.services.interfaces.IEmailService;
 import com.meetingroom.manager.services.interfaces.IUsuarioService;
 import com.meetingroom.manager.services.security.AuthService;
+import com.meetingroom.manager.services.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +41,9 @@ public class AuthController {
     @Autowired 
 	private IUsuarioService usuarioService;
 
+	@Autowired
+	private JwtService jwtService;
+
    /* private final AuthService authService;
     
     @PostMapping(value = "login")
@@ -65,7 +70,10 @@ public class AuthController {
 	     }catch (BadCredentialsException e){
 	    	 throw new BadRequestException("Log-002","Usuario o Password son invalidas");
 	         
-	     }catch (Exception e){
+	     }catch (DataNotFoundException e){
+			 throw new BadRequestException("Log-003",e.getMessage());
+		 }
+		 catch (Exception e){
 	    	 throw new BadRequestException("Log-001",e.getMessage());
 	      
 	     }
@@ -73,10 +81,15 @@ public class AuthController {
     /*
 	 * Verificamos la activacion del usuario.
 	 */
-	@PostMapping("/verify")
-	public ResponseEntity<?> verifyUser(@RequestParam("code") String code) {
+	@GetMapping("/verify")
+	//public ResponseEntity<?> verifyUser(@RequestParam("code") String code) {
+	public void verifyUser(@RequestParam("code") String code) {
+
 		log.info("**[MeetingRoom]--- Verificando el codigo de activacion");
 		log.info("**[MeetingRoom]--- Parametro leido: " + code);
+		jwtService.verificoToken(code);
+		usuarioService.verify(code);
+		/*
 		Map<String, String> response = new HashMap<>();
 		if (usuarioService.verify(code)) {
         	response.put("estado", "Verificado");
@@ -87,6 +100,7 @@ public class AuthController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 			//return "verify_fail";
 		}
+		*/
 	}
 
 }

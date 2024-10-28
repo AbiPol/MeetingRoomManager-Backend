@@ -117,8 +117,10 @@ public class JwtService {
 
     public boolean verificoToken(String token) {
         try {
+            System.out.println("Token a verificar: " + token);
             // Verifica la firma y la expiración del token
             Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            System.out.println("Codigo Token verificado");
             return true;
         } catch (ExpiredJwtException e) {
             System.out.println("Token expirado");

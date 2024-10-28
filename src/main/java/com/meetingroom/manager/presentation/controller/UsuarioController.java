@@ -12,6 +12,7 @@ import com.meetingroom.manager.services.interfaces.IEmailService;
 import com.meetingroom.manager.services.interfaces.IUsuarioService;
 import com.meetingroom.manager.services.security.JwtService;
 
+import jakarta.mail.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -72,8 +73,10 @@ public class UsuarioController {
 		log.info("**[MeetingRoom]--- newUsuario: " + newUsuario.getPassword());
 		try {
 			Usuario userAux = usuarioService.newUser(newUsuario.getEmail(), newUsuario.getPassword());
-
-			mailService.sendMailConfirmAccount(userAux, userAux.getVerificationCode());
+		    Session sesion = mailService.creaSession();
+            //Enviamos el email de confirmacion
+			mailService.sendMailConfirmAccount(sesion, userAux, jwtService.getToken(userAux));
+			//mailService.sendMailConfirmAccount(userAux, userAux.getVerificationCode());
 
 			response.put("Mensaje","Usuario creado correctamente");
 			return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);

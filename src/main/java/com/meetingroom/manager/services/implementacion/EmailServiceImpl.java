@@ -6,10 +6,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 import com.meetingroom.manager.persistence.entity.Usuario;
 import com.meetingroom.manager.services.interfaces.IEmailService;
+import jakarta.mail.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -18,7 +20,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -30,20 +31,27 @@ public class EmailServiceImpl implements IEmailService {
     @Value("${email.sender}")
     private String emailUser;
 
+    @Value("${email.password}")
+    private String password;
+
     @Autowired
     private JavaMailSender mailSender;
 
     
     @Override
     @Transactional
-    public void sendMailConfirmAccount(Usuario user, String codigo) {
+    public void sendMailConfirmAccount(Session sesion, Usuario user, String codigo) {
         String siteURL = "http://localhost:8080/";
-        MimeMessage mensaje = mailSender.createMimeMessage();
+        //MimeMessage mensaje = mailSender.createMimeMessage();
+        MimeMessage mensaje = new MimeMessage(sesion);
 
         //System.out.println("sendMailConfirmAccount ***COD VERIFICACION: " + codigo);
 
         try {
             //System.out.println("Entro en el try");
+            mensaje.addHeader("Content-Type", "text/html; charset=utf-8");
+            mensaje.addHeader("Content-Transfer-Encoding", "8bit");
+            mensaje.addHeader("format","flowed");
             mensaje.setFrom(new InternetAddress(emailUser));
             //System.out.println("Usuario al que envio correo: " + user.getEmail());
             //mensaje.setRecipients(MimeMessage.RecipientType.TO, user.getEmail());
@@ -51,7 +59,8 @@ public class EmailServiceImpl implements IEmailService {
             mensaje.setContent(getHtmlConfirm(siteURL,codigo,user.getEmail()), "text/html; charset=utf-8");
             mensaje.setSubject("Verifica tu registro en Meeting-Room Services");
 
-            mailSender.send(mensaje);
+            Transport.send(mensaje);
+            //mailSender.send(mensaje);
         } catch (AddressException e) {
             e.printStackTrace();
         } catch (MessagingException e) {
@@ -96,6 +105,29 @@ public class EmailServiceImpl implements IEmailService {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Session creaSession() {
+       /* final String fromEmail = emailSenderSettings.getUsername();
+        final String password = emailSenderSettings.getPassword();
+        final String toEmail = email.getRecipient();
+*/
+        System.out.println("Creando sesion con el servidor de gmail");
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587"); //TLS Port
+        props.put("mail.smtp.auth", "true"); //enable authentication
+        props.put("mail.smtp.starttls.enable", "true"); //enable STARTTLS
+
+        Authenticator auth = new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(emailUser, password);
+            }
+        };
+        return Session.getInstance(props, auth);
+
+        //EmailUtil.sendEmail(session, fromEmail, toEmail, email.getSubject(), email.getBody());
+
     }
 
     /*
@@ -157,7 +189,7 @@ public class EmailServiceImpl implements IEmailService {
             try (var file = Files.lines(path)) {
                 var html = file.collect(Collectors.joining());
                 
-                String verifyURL = URL + "verify?code=" + codigoVerificacion;
+                String verifyURL = URL + "auth/verify?code=" + codigoVerificacion;
                 htmlEmail = html.replace("{{URL}}", verifyURL).replace("{{fullName}}", email);
             }
         } catch (Exception e) {
@@ -166,7 +198,4 @@ public class EmailServiceImpl implements IEmailService {
 
         return htmlEmail;
     }
-
-
-   
 }

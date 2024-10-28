@@ -13,9 +13,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IUsuarioDAO extends JpaRepository<Usuario, Long>{
-	
-	public Optional<Usuario> findByEmail(String email);
-	
+
+	public Optional<Usuario> findByEmail (String email);
+
+	//@Query("SELECT u FROM Usuario u WHERE u.email = ?1 AND u.verificationCode = 1")
+	public Optional<Usuario> findByEmailAndEstadoUserIsTrue (String email);
+
 	@Modifying
 	@Query("UPDATE Usuario u SET u.roles = ?1 WHERE u.email = ?2")
 	public void insertRol(Rol rol, String email);

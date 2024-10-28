@@ -42,11 +42,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-    	//System.out.println("Estoy en do filterhain");
+    	System.out.println("Estoy en dofilterhain: " + request);
     	final String token = getTokenFromRequest(request);
     	final String username;
 
-    	System.out.println("TOKEN: " + token);
+    	System.out.println("***** doFilterInternal -- TOKEN: " + token);
     	if (token==null)
 	    {
 	        filterChain.doFilter(request, response);

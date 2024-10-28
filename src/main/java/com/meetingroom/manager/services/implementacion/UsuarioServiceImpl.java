@@ -17,6 +17,7 @@ import com.meetingroom.manager.services.interfaces.IEmailService;
 import com.meetingroom.manager.services.interfaces.IPermisosService;
 import com.meetingroom.manager.services.interfaces.IRolService;
 import com.meetingroom.manager.services.interfaces.IUsuarioService;
+import com.meetingroom.manager.services.security.AuthService;
 import com.meetingroom.manager.services.security.JwtService;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,12 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
 	@Autowired
 	private IEmailService emailService;
+
+	@Autowired
+	private AuthService authService;
+
+	@Autowired
+	private JwtService jwtService;
 
 	
 	@Override
@@ -133,9 +140,10 @@ public class UsuarioServiceImpl implements IUsuarioService {
 	public boolean verify(String codigo) {
 		System.out.println("Codigo verificacion en servicio verificar: " + codigo);
 
-		//Usuario user = usuarioDao.findByEmail(jwtService.getUsernameFromToken(codigo))
-		//		.orElseThrow(() -> new DataNotFoundException("USR-999", "Usuario no dado de alta en el sistema"));
-		Usuario user = usuarioDao.findByVerificationCode(codigo);
+		Usuario user = usuarioDao.findByEmail(jwtService.getUsernameFromToken(codigo))
+				.orElseThrow(() -> new DataNotFoundException("", "Usuario no dado de alta en el sistema"));
+		//Usuario user = usuarioDao.findByVerificationCode(codigo);
+		//authService.confirmar(user.getEmail(),user.getPassword());
 		//System.out.println("Estado del Usuario encontrado en servicio user: " + user.isEstadoUser());
 		//System.out.println("Usuario encontrado en servicio user: " + user.getEmail());
 		if (user!= null && user.isEstadoUser() == false) {
